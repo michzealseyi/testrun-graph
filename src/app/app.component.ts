@@ -1,14 +1,148 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Component } from "@angular/core";
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexTitleSubtitle,
+  ApexDataLabels,
+  ApexFill,
+  ApexMarkers,
+  ApexYAxis,
+  ApexXAxis,
+  ApexTooltip,
+  NgApexchartsModule,
+} from "ng-apexcharts";
+import { dataSeries } from "./data-series";
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone:true,
+  imports:[ NgApexchartsModule, NzModalModule, NzButtonModule, BrowserAnimationsModule ],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  title = 'testrun-graph';
+  public series: ApexAxisChartSeries;
+  public chart: ApexChart;
+  public dataLabels: ApexDataLabels;
+  public markers: ApexMarkers;
+  public title: ApexTitleSubtitle;
+  public fill: ApexFill;
+  public yaxis: ApexYAxis;
+  public xaxis: ApexXAxis;
+  public tooltip: ApexTooltip;
+  
+  // isVisible = false;
+
+
+  // showModal(): void {
+  //   this.isVisible = true;
+  // }
+
+  // handleOk(): void {
+  //   console.log('Button ok clicked!');
+  //   this.isVisible = false;
+  // }
+
+  // handleCancel(): void {
+  //   console.log('Button cancel clicked!');
+  //   this.isVisible = false;
+  // }
+
+  
+
+  constructor() {
+    this.initChartData();
+  }
+
+  isVisible = false;
+
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    console.log('Button ok clicked!');
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
+  }
+
+  public initChartData(): void {
+  let ts2 = 1484418600000;
+    let dates = [];
+    for (let i = 0; i < 120; i++) {
+      ts2 = ts2 + 86400000;
+      dates.push([ts2, dataSeries[i]?.value]);
+    }
+
+    this.series = [
+      {
+        name: "XYZ MOTORS",
+        data: dates
+      }
+    ];
+    this.chart = {
+      type: "area",
+      stacked: false,
+      height: 350,
+      zoom: {
+        type: "x",
+        enabled: true,
+        autoScaleYaxis: true
+      },
+      toolbar: {
+        autoSelected: "zoom"
+      }
+    };
+    this.dataLabels = {
+      enabled: false
+    };
+    this.markers = {
+      size: 0
+    };
+    this.title = {
+      text: "Stock Price Movement",
+      align: "left"
+    };
+    this.fill = {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        inverseColors: false,
+        opacityFrom: 0.5,
+        opacityTo: 0,
+        stops: [0, 90, 100]
+      }
+    };
+    this.yaxis = {
+      labels: {
+        formatter: function(val) {
+          return (val / 1000000).toFixed(0);
+        }
+      },
+      title: {
+        text: "Price"
+      }
+    };
+    this.xaxis = {
+      type: "datetime"
+    };
+    this.tooltip = {
+      shared: false,
+      y: {
+        formatter: function(val) {
+          return (val / 1000000).toFixed(0);
+        }
+      }
+    };
+  }
 }
+
+
+  
